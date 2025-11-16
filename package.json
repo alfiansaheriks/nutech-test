@@ -1,0 +1,47 @@
+{
+  "name": "express-api",
+  "version": "1.0.0",
+  "description": "This project is for technical test NUTECH",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx --watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "migrate": "psql \"$DATABASE_URL\" -f sql/init_transactions.sql",
+    "seed": "tsx src/scripts/seed.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alfiansah Erik Sugiarto",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.2",
+    "nodemon": "^3.1.11",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@tsconfig/node22": "^22.0.3",
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.6",
+    "eslint": "^9.39.1",
+    "eslint-plugin-perfectionist": "^4.15.1",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4"
+  }
+}
