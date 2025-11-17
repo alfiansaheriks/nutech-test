@@ -14,7 +14,7 @@ const port = process.env.PORT ?? 4000;
 app.use(express.json());
 app.use(router);
 
-app.use("/tmp", express.static(path.join(__dirname, "../tmp")));
+app.use("/tmp", express.static(path.join(__dirname, "/tmp")));
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port as string}`);
