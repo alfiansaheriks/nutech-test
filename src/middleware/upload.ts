@@ -1,6 +1,5 @@
 import multer, { type FileFilterCallback, MulterError } from "multer";
 import type { Request, Response, NextFunction } from "express";
-import fs from "fs";
 
 interface ErrorResponse {
   status: number;
@@ -10,20 +9,10 @@ interface ErrorResponse {
 
 export const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    try {
-      const uploadPath = "/tmp/uploads/profile";
-      if (!fs.existsSync(uploadPath)) {
-        fs.mkdirSync(uploadPath);
-      }
-      cb(null, uploadPath);
-    } catch (error) {
-      console.error("Error creating upload directory:", error);
-      cb(null, "/tmp/uploads/profile");
-    }
+    cb(null, "/tmp");
   },
   filename: (_req, file, cb) => {
-    const parts = file.originalname.split(".");
-    const ext = parts.length > 1 ? (parts.pop() ?? "bin") : "bin";
+    const ext = file.originalname.split(".").pop() ?? "bin";
     cb(null, `profile-${Date.now().toString()}.${ext}`);
   },
 });
