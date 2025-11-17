@@ -9,7 +9,7 @@ interface ErrorResponse {
 
 export const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
-    cb(null, "uploads/profile");
+    cb(null, "/tmp/uploads/profile");
   },
   filename: (_req, file, cb) => {
     const parts = file.originalname.split(".");

@@ -53,7 +53,7 @@ export class UserController {
         return;
       }
 
-      const imageUrl = `/uploads/profile/${req.file.filename}`;
+      const imageUrl = `/tmp/uploads/profile/${req.file.filename}`;
       const updated = await this.service.updateImage(req.user.email, { profile_image: imageUrl });
 
       successResponse(res, 200, 0, "Profile berhasil diperbarui", updated);
