@@ -1,7 +1,7 @@
 import express from "express";
-import { ServiceController, TransactionController, UserController } from "../controllers/index.js";
+import { TransactionController, ServiceController, UserController } from "../controllers/index.js";
 import { validate } from "../middleware/validate.js";
-import { validateRegister, validateLogin, validateUpdate } from "../validations/index.js";
+import { validateRegister, validateLogin, validateUpdate, validateTopup, validatePayment } from "../validations/index.js";
 import { auth } from "../middleware/auth.js";
 import { multerErrorHandler, upload } from "../middleware/upload.js";
 import { BannerController } from "../controllers/banner/banners.controller.js";
@@ -25,5 +25,8 @@ router.get("/services", auth, serviceController.getAllServices.bind(serviceContr
 
 // Transaction Module
 router.get("/balance", auth, transactionController.getBalance.bind(transactionController));
+router.post("/topup", auth, validate(validateTopup), transactionController.topupBalance.bind(transactionController));
+router.post("/transaction", auth, validate(validatePayment), transactionController.payment.bind(transactionController));
+router.get("/transaction/history", auth, transactionController.transactionHistory.bind(transactionController));
 
 export default router;

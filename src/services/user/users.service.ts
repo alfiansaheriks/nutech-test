@@ -1,4 +1,4 @@
-import { UserRepository } from "../../repositories/index.js";
+import { BalanceRepository, UserRepository } from "../../repositories/index.js";
 import type { LoginPayload, RegisterPayload, UserUpdateImagePayload, UserUpdatePayload } from "../../types/user.js";
 import { comparePassword, hashPassword } from "../../utils/bcrypt.js";
 import { deleteFile } from "../../utils/file.js";
@@ -6,9 +6,11 @@ import { sign } from "../../utils/jwt.js";
 
 export class UserService {
   private repository: UserRepository;
+  private balanceRepository: BalanceRepository;
 
   constructor() {
     this.repository = new UserRepository();
+    this.balanceRepository = new BalanceRepository();
   }
 
   async checkUser(email: string) {
@@ -33,6 +35,7 @@ export class UserService {
     };
 
     const users = await this.repository.store(userPayload);
+    await this.balanceRepository.insertBalance(users.id, 0);
     return users;
   }
 

@@ -4,36 +4,15 @@ import type { ProfileResponse, RegisterPayload, UserResponse, UserUpdateImagePay
 
 export class UserRepository {
   async store(payload: RegisterPayload): Promise<UserResponse> {
-    const client = await pool.connect();
-    try {
-      await client.query("BEGIN");
+    const query = `INSERT INTO users (email, first_name, last_name, password) VALUES ($1, $2, $3, $4) RETURNING *`;
+    const values = [payload.email, payload.first_name, payload.last_name, payload.password];
+    const result: QueryResult<UserResponse> = await pool.query(query, values);
 
-      const query = `INSERT INTO users (email, first_name, last_name, password) VALUES ($1, $2, $3, $4) RETURNING *`;
-      const values = [payload.email, payload.first_name, payload.last_name, payload.password];
-      const result: QueryResult<UserResponse> = await client.query(query, values);
-
-      if (!result.rows[0]) {
-        throw new Error("Gagal membuat pengguna");
-      }
-
-      const balanceQuery = `INSERT INTO user_balances (user_id, balance) VALUES ($1, 0) RETURNING *`;
-      const balanceResult = await client.query(balanceQuery, [result.rows[0].id]);
-
-      if (!balanceResult.rows[0]) {
-        await client.query("ROLLBACK");
-        throw new Error("Gagal membuat saldo pengguna");
-      }
-
-      await client.query("COMMIT");
-
-      return result.rows[0];
-    } catch (error) {
-      console.error("Error di store method:", error);
-      await client.query("ROLLBACK");
+    if (!result.rows[0]) {
       throw new Error("Gagal membuat pengguna");
-    } finally {
-      client.release();
     }
+
+    return result.rows[0];
   }
 
   async update(email: string, payload: UserUpdatePayload): Promise<QueryResult<ProfileResponse>> {
