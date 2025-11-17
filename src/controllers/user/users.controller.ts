@@ -1,13 +1,15 @@
 import type { Request, Response } from "express";
-import { UserService } from "../../services/index.js";
+import { CloudinaryService, UserService } from "../../services/index.js";
 import type { LoginPayload, RegisterPayload, UserUpdatePayload } from "../../types/user.js";
 import { successResponse, errorResponse } from "../../helpers/response.helpers.js";
 
 export class UserController {
   private service: UserService;
+  private cloudinaryService: CloudinaryService;
 
   constructor() {
     this.service = new UserService();
+    this.cloudinaryService = new CloudinaryService();
   }
 
   async register(req: Request, res: Response) {
@@ -53,7 +55,9 @@ export class UserController {
         return;
       }
 
-      const imageUrl = `/tmp/${req.file.filename}`;
+      const result = await this.cloudinaryService.uploadToCloudinary(req.file.buffer);
+
+      const imageUrl = result.secure_url;
       const updated = await this.service.updateImage(req.user.email, { profile_image: imageUrl });
 
       successResponse(res, 200, 0, "Profile berhasil diperbarui", updated);
